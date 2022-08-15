@@ -49,4 +49,11 @@ export const initConnection = () => {
       isOfferer: JSON.parse(params.get('is-offerrer') || 'false')
     })
   })
+
+  window.addEventListener('unload', () => {
+    if (socket.readyState === WebSocket.OPEN)
+      socket.close()
+  })
+
+  return () => socket.close()
 } 
