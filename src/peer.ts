@@ -39,7 +39,7 @@ const initPeers = async (socket: any, { receiver, isOfferer }: {
 
 export const initConnection = () => {
   const params = new URLSearchParams(window.location.search)
-  const socket = new WebSocket('ws://localhost:8080')
+  const socket = new WebSocket('wss://signal-server-app.herokuapp.com/')
 
   socket.addEventListener('open', () => {
     socket.send(JSON.stringify({ type: 'login', name: params.get('name') }))
