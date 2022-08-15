@@ -1,8 +1,18 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useEffect } from 'react'
+
+import { initConnection } from './peer'
+
+import logo from './logo.svg'
+import './App.css'
 
 function App() {
+
+  useEffect(() => {
+    window.onload = () => {
+      initConnection()
+    }
+  }, [])
+
   return (
     <div className="App">
       <header className="App-header">
@@ -19,8 +29,11 @@ function App() {
           Learn React
         </a>
       </header>
+      <video id="video" autoPlay playsInline>
+
+      </video>
     </div>
-  );
+  )
 }
 
-export default App;
+export default App
