@@ -2,7 +2,6 @@ import React, { useEffect } from 'react'
 
 import { initConnection } from './peer'
 
-import logo from './logo.svg'
 import './App.css'
 
 function App() {
