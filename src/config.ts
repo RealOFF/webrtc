@@ -1,0 +1,2 @@
+export const BASE_SIGNAL_SERVER_URL = process.env.REACT_APP_BASE_SIGNAL_SERVER || 'ws://localhost:3000'
+export const SWARM_SIGNAL_SERVER_URL = process.env.REACT_APP_SWARM_SIGNAL_SERVER || 'ws://localhost:3000'

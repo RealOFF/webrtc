@@ -1,21 +1,31 @@
 import React, { useEffect } from 'react'
 
-import { initConnection } from './peer'
+import { initConnection, initSwarmConnection } from './peer'
 
 import './App.css'
 
-function App() {
+const color = 'blue'
 
+function App() {
   useEffect(() => {
     window.onload = () => {
-      initConnection()
+      if (window.location.pathname.includes('/swarm')) {
+        initSwarmConnection()
+      } else {
+        initConnection()
+      }
     }
   }, [])
 
   return (
     <div className="App">
-      <video id="video" autoPlay playsInline>
-      </video>
+      <h1 style={{
+        color
+      }}>
+        HELLO
+      </h1>
+      <div id="video-wrapper">
+      </div>
     </div>
   )
 }
