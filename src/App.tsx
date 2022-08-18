@@ -8,8 +8,9 @@ const color = 'blue'
 
 function App() {
   useEffect(() => {
+    const params = new URLSearchParams(window.location.search)
     window.onload = () => {
-      if (window.location.pathname.includes('/swarm')) {
+      if (JSON.parse(params.get('is-swarm'))) {
         initSwarmConnection()
       } else {
         initConnection()
