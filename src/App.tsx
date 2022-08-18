@@ -10,7 +10,7 @@ function App() {
   useEffect(() => {
     const params = new URLSearchParams(window.location.search)
     window.onload = () => {
-      if (JSON.parse(params.get('is-swarm'))) {
+      if (JSON.parse(params.get('is-swarm') || 'false')) {
         initSwarmConnection()
       } else {
         initConnection()
