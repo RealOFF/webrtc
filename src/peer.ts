@@ -74,8 +74,13 @@ export const initConnection = () => {
 }
 
 const initSwarmPeer = async (socket: any) => {
-  const cam = await navigator.mediaDevices.getUserMedia({ video: true, audio: true })
   const params = new URLSearchParams(window.location.search)
+  const cam = await navigator.mediaDevices.getUserMedia({ video: true, audio: true })
+  if (JSON.parse(params.get('is-muted') || 'true')) {
+    const audioTrack = cam.getAudioTracks()[0]
+    audioTrack.stop()
+    audioTrack.enabled = false
+  }
   const swarm: any = new FastRTCSwarm({
     streams: { cam },
   })
