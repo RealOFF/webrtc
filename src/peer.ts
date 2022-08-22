@@ -8,17 +8,24 @@ import {
 } from './config'
 
 const createVideoCreator = (containerId: string) => {
-  return (media: MediaStream) => {
-    const container = document.getElementById(containerId)
-    const video = document.createElement('video')
-    video.autoplay = true
-    video.playsInline = true
-    video.srcObject = media
-    container?.appendChild(video)
+  return {
+    createVideo: (media: MediaStream, id: string) => {
+      const container = document.getElementById(containerId)
+      const video = document.createElement('video')
+      video.autoplay = true
+      video.playsInline = true
+      video.srcObject = media
+      video.id = `video-${id}`
+      container?.appendChild(video)
+    },
+    removeVideo: (id: string) => {
+      const element = document.getElementById(`video-${id}`)
+      element?.remove()
+    }
   }
 }
 
-const createVideo = createVideoCreator('video-wrapper')
+const { createVideo, removeVideo } = createVideoCreator('video-wrapper')
 
 const initPeers = async (socket: any, { receiver, isOfferer }: {
   name: string
@@ -50,9 +57,10 @@ const initPeers = async (socket: any, { receiver, isOfferer }: {
     console.log(`got message ${data} from ${peer.id}`)
   })
 
-  localPeer.on('stream', (stream: MediaStream) => {
+  localPeer.on('stream', (stream: MediaStream, sourceName: string, peer: FastRTCPeer) => {
     // all tracks that belong to the stream have been received!
-    createVideo(stream)
+    if (peer.userId)
+      createVideo(stream, peer.userId)
   })
 }
 
@@ -105,15 +113,25 @@ const initSwarmPeer = async (socket: any) => {
     console.log('data channel open!')
     peer.send('hi')
   })
-  swarm.on('stream', (stream: MediaStream) => {
+  swarm.on('stream', (stream: MediaStream, sourceName: string, peer: FastRTCPeer) => {
     // all tracks that belong to the stream have been received!
-    createVideo(stream)
+    if (peer.userId)
+      createVideo(stream, peer.userId)
   })
   // when your peer says hi, log it
   swarm.on('data', (data: any, peer: any) => {
     console.log('data received', data, peer)
   })
   swarm.on('error', (...data: any) => console.error('Error:', data))
+  swarm.on('close', (peer: FastRTCPeer) => {
+    if (peer.userId)
+      removeVideo(peer.userId)
+  })
+}
+
+const closeSwarmPeer = (socket: any) => {
+  socket.send(JSON.stringify({ type: 'close' }))
+  socket.close()
 }
 
 export const initSwarmConnection = () => {
@@ -124,9 +142,10 @@ export const initSwarmConnection = () => {
   })
 
   window.addEventListener('unload', () => {
-    if (socket.readyState === WebSocket.OPEN)
-      socket.close()
+    if (socket.readyState === WebSocket.OPEN) {
+      closeSwarmPeer(socket)
+    }
   })
 
-  return () => socket.close()
+  return () => closeSwarmPeer(socket)
 }
