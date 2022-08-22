@@ -77,7 +77,7 @@ export const initConnection = () => {
     })
   })
 
-  window.addEventListener('unload', () => {
+  window.addEventListener('beforeunload', () => {
     if (socket.readyState === WebSocket.OPEN)
       socket.close()
   })
@@ -141,7 +141,7 @@ export const initSwarmConnection = () => {
     initSwarmPeer(socket)
   })
 
-  window.addEventListener('unload', () => {
+  window.addEventListener('beforeunload', () => {
     if (socket.readyState === WebSocket.OPEN) {
       closeSwarmPeer(socket)
     }
