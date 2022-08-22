@@ -1,7 +1,11 @@
 import FastRTCPeer from '@mattkrick/fast-rtc-peer'
 import FastRTCSwarm from '@mattkrick/fast-rtc-swarm'
 
-import { BASE_SIGNAL_SERVER_URL, SWARM_SIGNAL_SERVER_URL } from './config'
+import {
+  BASE_SIGNAL_SERVER_URL,
+  SWARM_SIGNAL_SERVER_URL,
+  ICE_SERVERS
+} from './config'
 
 const createVideoCreator = (containerId: string) => {
   return (media: MediaStream) => {
@@ -83,6 +87,9 @@ const initSwarmPeer = async (socket: any) => {
   }
   const swarm: any = new FastRTCSwarm({
     streams: { cam },
+    rtcConfig: {
+      iceServers: ICE_SERVERS,
+    } as any
   })
   // send the signal to the signaling server
   swarm.on('signal', (signal: any) => {
