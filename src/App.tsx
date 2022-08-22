@@ -1,14 +1,14 @@
 import React, { useEffect } from 'react'
+import 'normalize.css'
 
 import { initConnection, initSwarmConnection } from './peer'
 
 import './App.css'
 
-const color = 'blue'
+const params = new URLSearchParams(window.location.search)
 
 function App() {
   useEffect(() => {
-    const params = new URLSearchParams(window.location.search)
     if (JSON.parse(params.get('is-swarm') || 'false')) {
       initSwarmConnection()
     } else {
@@ -19,11 +19,13 @@ function App() {
 
   return (
     <div className="App">
-      <h1 style={{
-        color
+      <span style={{
+        color: '#7c7c83',
+        fontSize: 24,
+        fontWeight: 600
       }}>
-        HELLO
-      </h1>
+        Hello! Room: {params.get('room-id')}
+      </span>
       <div id="video-wrapper">
       </div>
     </div>
